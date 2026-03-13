@@ -75,8 +75,9 @@ async function ensureColumn(table, column, definition) {
     await ensureColumn('knowledge', 'created_at', "DATETIME DEFAULT CURRENT_TIMESTAMP");
     await ensureColumn('knowledge', 'updated_at', "DATETIME DEFAULT CURRENT_TIMESTAMP");
 
-    // Insert default admin if missing
-    await runAsync(`INSERT OR IGNORE INTO users (id, login_id, password, delete_password) VALUES (1, 'admin', 'admin123', 'leader123')`);
+    // Insert default admin if missing, update credentials if they exist
+    await runAsync(`INSERT OR IGNORE INTO users (id, login_id, password, delete_password) VALUES (1, 'Trailytics@Admin', 'Trailytics@Admin@2026', 'leader123')`);
+    await runAsync(`UPDATE users SET login_id='Trailytics@Admin', password='Trailytics@Admin@2026' WHERE id=1`);
 
     // Seed default team members if table empty
     const teamRows = await allAsync(`SELECT COUNT(*) as cnt FROM team_members`);
