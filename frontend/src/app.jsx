@@ -25,7 +25,7 @@ export default function App() {
       if (id === "admin" && pass === "admin123") {
         setIsLoggedIn(true);
       } else {
-        alert("Invalid Credentials ");
+        alert("Invalid Credentials ❌");
       }
     } catch (error) {
       alert("Login failed. Please try again.");
@@ -219,69 +219,6 @@ const styles = {
     color: "#9ca3af",
     fontSize: "0.85rem",
   },
-  footerDark: {
-    paddingTop: "20px",
-    borderTop: "1px solid #374151",
-    color: "#6b7280",
-    fontSize: "0.85rem",
-  },
-  darkModeToggle: {
-    position: "absolute",
-    top: "20px",
-    right: "20px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  toggleText: {
-    fontSize: "1.2rem",
-  },
-  toggleTextDark: {
-    fontSize: "1.2rem",
-    filter: "brightness(1.2)",
-  },
-  switch: {
-    position: "relative",
-    display: "inline-block",
-    width: "50px",
-    height: "24px",
-  },
-  switchInput: {
-    opacity: "0",
-    width: "0",
-    height: "0",
-  },
-  slider: {
-    position: "absolute",
-    cursor: "pointer",
-    top: "0",
-    left: "0",
-    right: "0",
-    bottom: "0",
-    backgroundColor: "#ccc",
-    transition: ".4s",
-    borderRadius: "24px",
-  },
-  containerDark: {
-    height: "100vh",
-    width: "100vw",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "linear-gradient(135deg, #1a202c 0%, #2d3748 100%)",
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-  },
-  loginCardDark: {
-    background: "rgba(45, 55, 72, 0.95)",
-    backdropFilter: "blur(20px)",
-    borderRadius: "20px",
-    padding: "40px",
-    width: "420px",
-    boxShadow: "0 25px 50px rgba(0, 0, 0, 0.5)",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    textAlign: "center",
-    position: "relative",
-  },
 };
 
 // Add CSS animations
@@ -309,31 +246,5 @@ styleSheet.insertRule(`
   button:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
-  }
-`, styleSheet.cssRules.length);
-
-styleSheet.insertRule(`
-  input:checked + .slider {
-    background-color: #667eea !important;
-  }
-`, styleSheet.cssRules.length);
-
-styleSheet.insertRule(`
-  input:checked + .slider:before {
-    transform: translateX(26px) !important;
-  }
-`, styleSheet.cssRules.length);
-
-styleSheet.insertRule(`
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
   }
 `, styleSheet.cssRules.length);
