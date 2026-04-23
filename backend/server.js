@@ -49,33 +49,12 @@ app.use("/team", teamRoutes);
 /* SERVER */
 const DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
-// Try listening on a port, and if it's in use try the next one (up to maxAttempts)
-function listenWithRetry(startPort, maxAttempts = 5) {
-  let attempts = 0;
+// For Vercel deployment, export the app
+module.exports = app;
 
-  function tryPort(port) {
-    const server = app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-
-    server.on('error', (err) => {
-      if (err && err.code === 'EADDRINUSE') {
-        attempts += 1;
-        console.warn(`Port ${port} in use, trying port ${port + 1}... (${attempts}/${maxAttempts})`);
-        if (attempts < maxAttempts) {
-          setTimeout(() => tryPort(port + 1), 200);
-        } else {
-          console.error(`Unable to bind to a port after ${maxAttempts} attempts. Exiting.`);
-          process.exit(1);
-        }
-      } else {
-        console.error('Server error:', err);
-        process.exit(1);
-      }
-    });
-  }
-
-  tryPort(startPort);
+// For local development, listen on port
+if (require.main === module) {
+  app.listen(DEFAULT_PORT, () => {
+    console.log(`Server running on port ${DEFAULT_PORT}`);
+  });
 }
-
-listenWithRetry(DEFAULT_PORT, 10);

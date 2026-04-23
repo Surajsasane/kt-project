@@ -1,6 +1,11 @@
+const path = require("path");
+
+// Use /tmp for Vercel serverless functions (writable), current dir for local
+const dbPath = process.env.VERCEL ? path.join("/tmp", "database.db") : "database.db";
+
 const sqlite3 = require("sqlite3").verbose();
 
-const db = new sqlite3.Database("database.db", (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) console.error(err.message);
   else console.log("Connected to SQLite database.");
 });
