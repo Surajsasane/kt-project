@@ -21,10 +21,3 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://kt-project-backend.onrender.com
-    buildFilter:
-      paths:
-        - src/**
-        - public/**
-        - package.json
-        - vite.config.js
-        - .env.production

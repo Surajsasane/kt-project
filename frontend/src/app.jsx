@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Dashboard from "./pages/Dashboard";
+import API_URL from "./config/api";
+import axios from "axios";
 
 export default function App() {
   const [loginId, setLoginId] = useState("");
@@ -19,10 +21,12 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      // Simulate API call - replace with actual authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        login_id: id,
+        password: pass,
+      });
 
-      if (id === "admin" && pass === "admin123") {
+      if (response.data.success) {
         setIsLoggedIn(true);
       } else {
         alert("Invalid Credentials ❌");
