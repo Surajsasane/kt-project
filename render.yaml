@@ -7,8 +7,6 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
-      - key: NODE_VERSION
-        value: "24"
       - key: PORT
         value: 8000
 
