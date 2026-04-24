@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/dashboard.css";
 import KnowledgeTable from "../components/KnowledgeTable";
 import TeamManager from "../components/TeamManager";
+import API_URL from "../config/api";
 
 export default function Dashboard({ onLogout }) {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -14,7 +15,7 @@ export default function Dashboard({ onLogout }) {
 
   const fetchTeamMembers = async () => {
     try {
-      const response = await fetch("http://localhost:8000/team");
+      const response = await fetch(`${API_URL}/team`);
       const data = await response.json();
       setTeamMembers(data || []);
       if (data.length > 0) {

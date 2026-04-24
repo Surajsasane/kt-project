@@ -9,6 +9,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "18"
+      - key: PORT
+        value: 8000
 
   - type: static_site
     name: kt-project-frontend
@@ -16,3 +18,13 @@ services:
     rootDir: frontend
     buildCommand: npm install && npm run build
     publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://kt-project-backend.onrender.com
+    buildFilter:
+      paths:
+        - src/**
+        - public/**
+        - package.json
+        - vite.config.js
+        - .env.production

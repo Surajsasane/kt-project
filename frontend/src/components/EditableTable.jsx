@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../config/api";
 
 export default function EditableTable({ employee }) {
   const [rows, setRows] = useState([]);
 
+//////////////////////////////////////////////////////////////
+/* LOAD DATA */
+//////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////
   /* LOAD DATA */
   //////////////////////////////////////////////////////////////
@@ -14,7 +18,7 @@ export default function EditableTable({ employee }) {
 
   const fetchRows = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/knowledge/${employee}`);
+      const res = await axios.get(`${API_URL}/knowledge/${employee}`);
       setRows(res.data);
     } catch (err) {
       console.error(err);
@@ -27,7 +31,7 @@ export default function EditableTable({ employee }) {
 
   const addRow = async () => {
     try {
-      await axios.post("http://localhost:8000/knowledge", {
+      await axios.post(`${API_URL}/knowledge`, {
         employee,
         brand: "",
         link: "",
@@ -58,7 +62,7 @@ export default function EditableTable({ employee }) {
 
     const updatedRow = updatedRows.find((r) => r.id === id);
 
-    axios.put(`http://localhost:8000/knowledge/${id}`, updatedRow);
+    axios.put(`${API_URL}/knowledge/${id}`, updatedRow);
   };
 
   //////////////////////////////////////////////////////////////
@@ -67,7 +71,7 @@ export default function EditableTable({ employee }) {
 
   const deleteRow = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/knowledge/${id}`);
+      await axios.delete(`${API_URL}/knowledge/${id}`);
       fetchRows();
     } catch (err) {
       console.error(err);
@@ -85,7 +89,7 @@ export default function EditableTable({ employee }) {
     formData.append("file", file);
 
     try {
-      const res = await axios.post("http://localhost:8000/upload", formData);
+      const res = await axios.post(`${API_URL}/upload`, formData);
 
       updateCell(id, field, res.data.path);
     } catch (err) {
@@ -142,7 +146,7 @@ export default function EditableTable({ employee }) {
                   }
                 >
                   {field.includes("link") && row[field] ? (
-                    <a href={`http://localhost:8000${row[field]}`} target="_blank">
+                    <a href={`${API_URL}${row[field]}`} target="_blank">
                       {row[field]}
                     </a>
                   ) : (
@@ -155,7 +159,7 @@ export default function EditableTable({ employee }) {
               <td>
                 {row.python_file && (
                   <a
-                    href={`http://localhost:8000${row.python_file}`}
+                    href={`${API_URL}${row.python_file}`}
                     target="_blank"
                   >
                     View File
@@ -174,7 +178,7 @@ export default function EditableTable({ employee }) {
               <td>
                 {row.extra_file && (
                   <a
-                    href={`http://localhost:8000${row.extra_file}`}
+                    href={`${API_URL}${row.extra_file}`}
                     target="_blank"
                   >
                     View File

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/table.css";
+import API_URL from "../config/api";
 
 export default function KnowledgeTable({ employee }) {
   const [rows, setRows] = useState([]);
@@ -18,8 +19,6 @@ export default function KnowledgeTable({ employee }) {
     has_video: "",
   });
   const [showFilters, setShowFilters] = useState(false);
-
-  const API_URL = "http://localhost:8000";
 
   // Fetch data
   useEffect(() => {

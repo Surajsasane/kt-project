@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/team.css";
+import API_URL from "../config/api";
 
 export default function TeamManager({ onTeamUpdate }) {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -7,8 +8,6 @@ export default function TeamManager({ onTeamUpdate }) {
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const API_URL = "http://localhost:8000";
 
   useEffect(() => {
     fetchTeamMembers();
