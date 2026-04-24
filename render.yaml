@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: kt-project-backend
+    env: node
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+
+  - type: static_site
+    name: kt-project-frontend
+    branch: main
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
