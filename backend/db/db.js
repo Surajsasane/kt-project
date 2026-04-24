@@ -6,8 +6,15 @@ const dbPath = process.env.RENDER || process.env.VERCEL ? path.join("/tmp", "dat
 const sqlite3 = require("sqlite3").verbose();
 
 const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) console.error(err.message);
-  else console.log("Connected to SQLite database.");
+  if (err) {
+    console.error("Database connection error:", err.message);
+    // In production, we might want to exit or handle this differently
+    if (process.env.NODE_ENV === 'production') {
+      console.error("Failed to connect to database in production");
+    }
+  } else {
+    console.log("Connected to SQLite database at:", dbPath);
+  }
 });
 
 // Promisified helpers
@@ -39,8 +46,11 @@ async function ensureColumn(table, column, definition) {
   }
 }
 
-(async () => {
+// Database initialization with better error handling
+async function initializeDatabase() {
   try {
+    console.log("Starting database initialization...");
+    
     // Create base tables if missing
     await runAsync(`
       CREATE TABLE IF NOT EXISTS users (
@@ -105,10 +115,17 @@ async function ensureColumn(table, column, definition) {
       }
     }
 
-    console.log('Database ready.');
+    console.log('Database initialization completed successfully.');
   } catch (err) {
     console.error('Database initialization error:', err.message);
+    // Don't throw in production, just log the error
+    if (process.env.NODE_ENV !== 'production') {
+      throw err;
+    }
   }
-})();
+}
+
+// Initialize database
+initializeDatabase();
 
 module.exports = db;

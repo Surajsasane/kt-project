@@ -17,6 +17,15 @@ const teamRoutes = require("./routes/team");
 app.use(cors());
 app.use(express.json());
 
+/* HEALTH CHECK ENDPOINT */
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development"
+  });
+});
+
 /* STATIC FOLDER FOR FILES */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -46,6 +55,23 @@ app.use("/auth", authRoutes);
 app.use("/knowledge", knowledgeRoutes);
 app.use("/team", teamRoutes);
 
+/* ERROR HANDLING MIDDLEWARE */
+app.use((err, req, res, next) => {
+  console.error("Server error:", err);
+  res.status(500).json({
+    success: false,
+    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message
+  });
+});
+
+/* 404 HANDLER */
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Endpoint not found"
+  });
+});
+
 /* SERVER */
 const DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
@@ -56,5 +82,6 @@ module.exports = app;
 if (require.main === module) {
   app.listen(DEFAULT_PORT, () => {
     console.log(`Server running on port ${DEFAULT_PORT}`);
+    console.log(`Health check available at: http://localhost:${DEFAULT_PORT}/health`);
   });
 }
