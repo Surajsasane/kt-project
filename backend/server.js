@@ -14,7 +14,10 @@ const knowledgeRoutes = require("./routes/knowledge");
 const teamRoutes = require("./routes/team");
 
 /* MIDDLEWARE */
-app.use(cors());
+app.use(cors({
+  origin: ['https://trailytics-workflows-continuity.onrender.com', 'http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 
 /* HEALTH CHECK ENDPOINT */
