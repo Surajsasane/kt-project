@@ -18,6 +18,13 @@ export default function Dashboard({ onLogout }) {
   const [newSheetName, setNewSheetName] = useState('');
   const [newSheetPassword, setNewSheetPassword] = useState('');
   const [sheetPasswords, setSheetPasswords] = useState({});
+  
+  // Admin Panel States
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [adminLoginPassword, setAdminLoginPassword] = useState('');
+  const ADMIN_PANEL_PASSWORD = 'Trailytics@2026';
 
   useEffect(() => {
     fetchTeamMembers();
@@ -72,11 +79,40 @@ export default function Dashboard({ onLogout }) {
 
   const deleteSheet = (sheetId) => {
     if (sheets.length > 1) {
-      setSheets(sheets.filter(sheet => sheet.id !== sheetId));
-      if (selectedSheet === sheetId) {
-        setSelectedSheet(sheets.find(s => s.id !== sheetId).id);
+      const adminPass = prompt('Enter admin password to delete sheet:');
+      if (adminPass === ADMIN_PANEL_PASSWORD) {
+        setSheets(sheets.filter(sheet => sheet.id !== sheetId));
+        if (selectedSheet === sheetId) {
+          setSelectedSheet(sheets.find(s => s.id !== sheetId).id);
+        }
+        // Remove from password cache
+        const newSheetPasswords = {...sheetPasswords};
+        delete newSheetPasswords[sheetId];
+        setSheetPasswords(newSheetPasswords);
+      } else if (adminPass !== null) {
+        alert('Incorrect admin password!');
       }
     }
+  };
+
+  const openAdminPanel = () => {
+    setShowAdminPanel(true);
+    setIsAdminAuthenticated(false);
+    setAdminLoginPassword('');
+  };
+
+  const authenticateAdmin = () => {
+    if (adminLoginPassword === ADMIN_PANEL_PASSWORD) {
+      setIsAdminAuthenticated(true);
+    } else {
+      alert('Incorrect admin password!');
+    }
+  };
+
+  const closeAdminPanel = () => {
+    setShowAdminPanel(false);
+    setIsAdminAuthenticated(false);
+    setAdminLoginPassword('');
   };
 
   const selectSheet = (sheetId) => {
@@ -106,6 +142,9 @@ export default function Dashboard({ onLogout }) {
             <h1>Employee Knowledge Management</h1>
           </div>
           <div className="header-actions">
+            <button onClick={openAdminPanel} className="btn-admin">
+              🔐 Admin Panel
+            </button>
             <div className="dark-mode-toggle">
               <span className="toggle-text">🌙</span>
               <label className="switch">
@@ -288,6 +327,97 @@ export default function Dashboard({ onLogout }) {
           )}
         </div>
       </main>
+
+      {/* Admin Panel Modal */}
+      {showAdminPanel && (
+        <div className="admin-panel-modal">
+          <div className="admin-modal-content">
+            {!isAdminAuthenticated ? (
+              <div className="admin-login">
+                <h3>🔐 Admin Panel Login</h3>
+                <input
+                  type="password"
+                  value={adminLoginPassword}
+                  onChange={(e) => setAdminLoginPassword(e.target.value)}
+                  placeholder="Enter admin password"
+                  className="admin-input"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      authenticateAdmin();
+                    }
+                  }}
+                />
+                <div className="admin-login-actions">
+                  <button onClick={authenticateAdmin} className="btn-primary">
+                    Login
+                  </button>
+                  <button onClick={closeAdminPanel} className="btn-secondary">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="admin-panel">
+                <div className="admin-header">
+                  <h3>🔐 Admin Panel</h3>
+                  <button onClick={closeAdminPanel} className="admin-close-btn">
+                    ✕
+                  </button>
+                </div>
+                
+                <div className="admin-content">
+                  <div className="admin-section">
+                    <h4>📋 Sheet Management</h4>
+                    <div className="sheet-list">
+                      {sheets.map((sheet) => (
+                        <div key={sheet.id} className="sheet-item">
+                          <div className="sheet-info-row">
+                            <span className="sheet-icon">{sheet.icon}</span>
+                            <div className="sheet-details">
+                              <strong>{sheet.name}</strong>
+                              <div className="sheet-credentials">
+                                <span className="label">Password:</span>
+                                <code className="password-display">{sheet.password}</code>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="admin-section">
+                    <h4>📊 System Information</h4>
+                    <div className="system-info">
+                      <div className="info-item">
+                        <span className="label">Total Sheets:</span>
+                        <span className="value">{sheets.length}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="label">Admin Password:</span>
+                        <span className="value">{ADMIN_PANEL_PASSWORD}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="label">Protected Sheets:</span>
+                        <span className="value">{sheets.length}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="admin-section">
+                    <h4>⚠️ Admin Actions</h4>
+                    <div className="admin-actions-info">
+                      <p><strong>Delete Sheet:</strong> Requires admin password confirmation</p>
+                      <p><strong>Sheet Access:</strong> Each sheet has unique password protection</p>
+                      <p><strong>Password Recovery:</strong> Use this panel to retrieve lost passwords</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="dashboard-footer">
