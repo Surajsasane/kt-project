@@ -7,8 +7,17 @@ import API_URL from "../config/api";
 export default function Dashboard({ onLogout }) {
   const [teamMembers, setTeamMembers] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [sheets, setSheets] = useState([
+    { id: 'sheet1', name: 'Project Alpha', icon: '📊', password: 'alpha123' },
+    { id: 'sheet2', name: 'Project Beta', icon: '📈', password: 'beta123' }
+  ]);
   const [selectedSheet, setSelectedSheet] = useState("sheet1");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showAddSheet, setShowAddSheet] = useState(false);
+  const [editingSheet, setEditingSheet] = useState(null);
+  const [newSheetName, setNewSheetName] = useState('');
+  const [newSheetPassword, setNewSheetPassword] = useState('');
+  const [sheetPasswords, setSheetPasswords] = useState({});
 
   useEffect(() => {
     fetchTeamMembers();
@@ -36,6 +45,55 @@ export default function Dashboard({ onLogout }) {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const addNewSheet = () => {
+    if (newSheetName.trim() && newSheetPassword.trim()) {
+      const icons = ['📊', '📈', '📉', '📋', '📝', '🗂️', '📁', '📑', '📄', '📃'];
+      const newSheet = {
+        id: `sheet${Date.now()}`,
+        name: newSheetName.trim(),
+        icon: icons[sheets.length % icons.length],
+        password: newSheetPassword.trim()
+      };
+      setSheets([...sheets, newSheet]);
+      setNewSheetName('');
+      setNewSheetPassword('');
+      setShowAddSheet(false);
+    }
+  };
+
+  const updateSheetName = (sheetId, newName) => {
+    setSheets(sheets.map(sheet => 
+      sheet.id === sheetId ? { ...sheet, name: newName } : sheet
+    ));
+    setEditingSheet(null);
+  };
+
+  const deleteSheet = (sheetId) => {
+    if (sheets.length > 1) {
+      setSheets(sheets.filter(sheet => sheet.id !== sheetId));
+      if (selectedSheet === sheetId) {
+        setSelectedSheet(sheets.find(s => s.id !== sheetId).id);
+      }
+    }
+  };
+
+  const selectSheet = (sheetId) => {
+    const sheet = sheets.find(s => s.id === sheetId);
+    if (sheet) {
+      if (!sheetPasswords[sheetId]) {
+        const password = prompt(`Enter password for ${sheet.name}:`);
+        if (password === sheet.password) {
+          setSheetPasswords({...sheetPasswords, [sheetId]: true});
+          setSelectedSheet(sheetId);
+        } else if (password !== null) {
+          alert('Incorrect password!');
+        }
+      } else {
+        setSelectedSheet(sheetId);
+      }
+    }
   };
 
   return (
@@ -70,21 +128,115 @@ export default function Dashboard({ onLogout }) {
       {/* Sheet Navigation */}
       <div className={`sheet-navigation ${isDarkMode ? 'dark-mode' : ''}`}>
         <div className="sheet-tabs">
+          {sheets.map((sheet) => (
+            <div key={sheet.id} className="sheet-tab-wrapper">
+              {editingSheet === sheet.id ? (
+                <div className="sheet-edit-form">
+                  <input
+                    type="text"
+                    value={newSheetName}
+                    onChange={(e) => setNewSheetName(e.target.value)}
+                    placeholder="Sheet name"
+                    className="sheet-name-input"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        updateSheetName(sheet.id, newSheetName);
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={() => updateSheetName(sheet.id, newSheetName)}
+                    className="sheet-save-btn"
+                  >
+                    ✓
+                  </button>
+                  <button
+                    onClick={() => setEditingSheet(null)}
+                    className="sheet-cancel-btn"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => selectSheet(sheet.id)}
+                  className={`sheet-tab ${selectedSheet === sheet.id ? "active" : ""}`}
+                >
+                  <span className="sheet-icon">{sheet.icon}</span>
+                  {sheet.name}
+                  <div className="sheet-actions">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingSheet(sheet.id);
+                        setNewSheetName(sheet.name);
+                      }}
+                      className="sheet-edit-btn"
+                      title="Edit sheet name"
+                    >
+                      ✏️
+                    </button>
+                    {sheets.length > 1 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(`Delete "${sheet.name}"?`)) {
+                            deleteSheet(sheet.id);
+                          }
+                        }}
+                        className="sheet-delete-btn"
+                        title="Delete sheet"
+                      >
+                        🗑️
+                      </button>
+                    )}
+                  </div>
+                </button>
+              )}
+            </div>
+          ))}
           <button
-            onClick={() => setSelectedSheet("sheet1")}
-            className={`sheet-tab ${selectedSheet === "sheet1" ? "active" : ""}`}
+            onClick={() => setShowAddSheet(true)}
+            className="sheet-tab add-sheet-tab"
           >
-            <span className="sheet-icon">📊</span>
-            Sheet 1 - Project Alpha
-          </button>
-          <button
-            onClick={() => setSelectedSheet("sheet2")}
-            className={`sheet-tab ${selectedSheet === "sheet2" ? "active" : ""}`}
-          >
-            <span className="sheet-icon">📈</span>
-            Sheet 2 - Project Beta
+            <span className="sheet-icon">➕</span>
+            Add Sheet
           </button>
         </div>
+        
+        {showAddSheet && (
+          <div className="add-sheet-modal">
+            <div className="modal-content">
+              <h3>Add New Sheet</h3>
+              <input
+                type="text"
+                value={newSheetName}
+                onChange={(e) => setNewSheetName(e.target.value)}
+                placeholder="Sheet name"
+                className="sheet-input"
+              />
+              <input
+                type="password"
+                value={newSheetPassword}
+                onChange={(e) => setNewSheetPassword(e.target.value)}
+                placeholder="Sheet password"
+                className="sheet-input"
+              />
+              <div className="modal-actions">
+                <button onClick={addNewSheet} className="btn-primary">
+                  Add Sheet
+                </button>
+                <button onClick={() => {
+                  setShowAddSheet(false);
+                  setNewSheetName('');
+                  setNewSheetPassword('');
+                }} className="btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Team Manager */}
@@ -114,15 +266,18 @@ export default function Dashboard({ onLogout }) {
           <div className="sheet-header">
             <h2>
               <span className="sheet-icon">
-                {selectedSheet === "sheet1" ? "📊" : "📈"}
+                {sheets.find(s => s.id === selectedSheet)?.icon || '�'}
               </span>
-              {selectedSheet === "sheet1" ? "Project Alpha" : "Project Beta"}
+              {sheets.find(s => s.id === selectedSheet)?.name || 'Unknown Sheet'}
             </h2>
             <p className="sheet-description">
-              {selectedSheet === "sheet1" 
-                ? "Managing knowledge and workflows for Project Alpha"
-                : "Managing knowledge and workflows for Project Beta"}
+              Managing knowledge and workflows for {sheets.find(s => s.id === selectedSheet)?.name || 'Unknown Sheet'}
             </p>
+            <div className="sheet-info">
+              <small>
+                🔒 Protected sheet • {sheets.length} total sheets
+              </small>
+            </div>
           </div>
           
           {selectedEmployee && (

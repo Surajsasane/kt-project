@@ -55,6 +55,243 @@
   transform: translateY(-1px);
 }
 
+/* Sheet Tab Wrapper */
+.sheet-tab-wrapper {
+  position: relative;
+}
+
+.sheet-actions {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sheet-tab:hover .sheet-actions {
+  opacity: 1;
+}
+
+.sheet-edit-btn,
+.sheet-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.sheet-edit-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.sheet-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Sheet Edit Form */
+.sheet-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sheet-name-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.sheet-name-input:focus {
+  border-color: #667eea;
+}
+
+.sheet-save-btn,
+.sheet-cancel-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.sheet-save-btn {
+  background: #667eea;
+  color: white;
+}
+
+.sheet-save-btn:hover {
+  background: #5a67d8;
+}
+
+.sheet-cancel-btn {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.sheet-cancel-btn:hover {
+  background: #cbd5e0;
+}
+
+/* Add Sheet Tab */
+.add-sheet-tab {
+  border: 2px dashed #cbd5e0 !important;
+  color: #64748b !important;
+  background: none !important;
+  font-weight: 500 !important;
+}
+
+.add-sheet-tab:hover {
+  border-color: #667eea !important;
+  color: #667eea !important;
+  background: rgba(102, 126, 234, 0.03) !important;
+}
+
+/* Add Sheet Modal */
+.add-sheet-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.sheet-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.sheet-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5a67d8;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e0;
+}
+
+/* Sheet Info */
+.sheet-info {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sheet-info small {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* Dark Mode for Sheet Management */
+.dashboard-container.dark-mode .sheet-edit-form {
+  background: #2d3748;
+  border-color: #667eea;
+}
+
+.dashboard-container.dark-mode .sheet-name-input {
+  background: #4a5568;
+  border-color: #4a5568;
+  color: #f7fafc;
+}
+
+.dashboard-container.dark-mode .modal-content {
+  background: #2d3748;
+}
+
+.dashboard-container.dark-mode .modal-content h3 {
+  color: #f7fafc;
+}
+
+.dashboard-container.dark-mode .sheet-input {
+  background: #4a5568;
+  border-color: #4a5568;
+  color: #f7fafc;
+}
+
+.dashboard-container.dark-mode .sheet-info {
+  border-top-color: #4a5568;
+}
+
+.dashboard-container.dark-mode .sheet-info small {
+  color: #cbd5e0;
+}
+
 /* Sheet Navigation */
 .sheet-navigation {
   background: white;
