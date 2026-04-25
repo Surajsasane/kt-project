@@ -16,7 +16,9 @@ const teamRoutes = require("./routes/team");
 /* MIDDLEWARE */
 app.use(cors({
   origin: ['https://trailytics-workflows-continuity.onrender.com', 'https://trailytics-workflow-contiunity.onrender.com', 'http://localhost:5173'],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
